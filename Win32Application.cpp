@@ -5,9 +5,8 @@
 
 int ZZ::Win32Application::Init()
 {
-	BaseApplication::Init();
-
 	CreateMainWindow();
+	BaseApplication::Init();
 
 	return 0;
 }
