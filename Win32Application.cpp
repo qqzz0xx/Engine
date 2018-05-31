@@ -35,6 +35,11 @@ bool ZZ::Win32Application::IsQuit()
 	return false;
 }
 
+HWND ZZ::Win32Application::GetHWND()
+{
+	return m_hWnd;
+}
+
 void ZZ::Win32Application::CreateMainWindow()
 {
 	// get the HINSTANCE of the Console Program

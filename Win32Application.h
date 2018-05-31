@@ -14,6 +14,8 @@ namespace ZZ {
 		virtual void Update() override;
 		virtual bool IsQuit() override;
 
+		HWND GetHWND();
+
 	protected:
 		void CreateMainWindow();
 		// the WindowProc function prototype

@@ -7,5 +7,10 @@ include_directories("${PROJECT_SOURCE_DIR}/Common")
 include_directories("${PROJECT_SOURCE_DIR}/Interface")
 
 add_subdirectory(Common)
-add_executable(App MainApp.cpp)
+
+file (GLOB Sources *.cpp *.cc)
+file (GLOB Heads *.hpp *.h)
+
+add_executable(App ${Heads} ${Sources})
 target_link_libraries(App Common)
+target_link_libraries(App D2D1.lib ole32.lib)
