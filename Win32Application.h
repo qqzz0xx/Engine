@@ -24,7 +24,7 @@ namespace ZZ {
 			WPARAM wParam,
 			LPARAM lParam);
 
-	private:
+
 		AppConfig m_Config;
 		HWND m_hWnd;
 	};
