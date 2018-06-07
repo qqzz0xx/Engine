@@ -1,67 +1,67 @@
 #include "OpenGLApplication.h"
 #include <tchar.h>
+#include "glad/glad.h"
 
 using namespace std;
 
+namespace ZZ {
+	extern IApplication* g_pApp;
+}
+
 int ZZ::OpenGLApplication::Init()
 {
-	HRESULT hr = S_OK;
-	//create gl init window
-	HINSTANCE hInstance = GetModuleHandle(NULL);
-	WNDCLASSEX wc;
-	memset(&wc, 0, sizeof(WNDCLASSEX));
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = DefWindowProc;
-	wc.lpszClassName = _T("InitWindow");
-	wc.hInstance = hInstance;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	
-	RegisterClassEx(&wc);
+	HRESULT result = S_OK;
+	//create main window
+	CreateMainWindow();
+	PIXELFORMATDESCRIPTOR pfd;
+	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = 32;
+	pfd.cDepthBits =0;
+	pfd.iLayerType = PFD_MAIN_PLANE;
 
-	DWORD Style = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
-	// create the window and use the result as the handle
-	HWND TemphWnd = CreateWindowEx(0,
-		wc.lpszClassName,      // name of the window class
-		"Init",                 // title of the window
-		Style,              // window style
-		CW_USEDEFAULT,                    // x-position of the window
-		CW_USEDEFAULT,                    // y-position of the window
-		0,             // width of the window
-		0,            // height of the window
-		NULL,                             // we have no parent window, NULL
-		NULL,                             // we aren't using menus, NULL
-		hInstance,                        // application handle
-		this);                            // pass pointer to current object
+	HWND hWnd = reinterpret_cast<Win32Application*>(g_pApp)->GetHWND();
+	HDC  hDC = GetDC(hWnd);
+	// Set a temporary default pixel format.
+	int nPixelFormat = ChoosePixelFormat(hDC, &pfd);
+	if (nPixelFormat == 0) return -1;
 
-										  // display the window on the screen
-
-	// gl init context
-	HDC TemphDC = GetDC(TemphWnd);
-	m_RenderContext = wglCreateContext(TemphDC);
-	if (!m_RenderContext)
+	result = SetPixelFormat(hDC, nPixelFormat, &pfd);
+	if (result != 1)
 	{
-		printf("wglCreateContext failed!\n");
 		return -1;
 	}
 
-	hr = wglMakeCurrent(TemphDC, m_RenderContext);
+	// Create a temporary rendering context.
+	m_RenderContext = wglCreateContext(hDC);
+	if (!m_RenderContext)
+	{
+		return -1;
+	}
 
-	hr = gladLoadWGL(TemphDC);
+	// Set the temporary rendering context as the current rendering context for this window.
+	result = wglMakeCurrent(hDC, m_RenderContext);
+	if (result != 1)
+	{
+		return -1;
+	}
 
-	hr = wglMakeCurrent(NULL, NULL);
+	if (!gladLoadWGL(hDC)) {
+		printf("WGL initialize failed!\n");
+		result = -1;
+	}
+	else {
+		result = 0;
+		printf("WGL initialize finished!\n");
+	}
 
-	wglDeleteContext(m_RenderContext);
-	ReleaseDC(TemphWnd, TemphDC);
-	DestroyWindow(TemphWnd);
-
-	//create main window
-	CreateMainWindow();
 
 	BaseApplication::Init();
 
-	return hr;
+	return result;
 }
 
 void ZZ::OpenGLApplication::Update()
