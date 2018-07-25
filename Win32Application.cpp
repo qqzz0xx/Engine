@@ -65,12 +65,12 @@ void ZZ::Win32Application::CreateMainWindow()
 	// create the window and use the result as the handle
 	m_hWnd = CreateWindowEx(0,
 		_T("GameEngineFromScratch"),      // name of the window class
-		m_Config.appName.c_str(),                 // title of the window
+		g_pAppConfig->appName.c_str(),                 // title of the window
 		WS_OVERLAPPEDWINDOW,              // window style
 		CW_USEDEFAULT,                    // x-position of the window
 		CW_USEDEFAULT,                    // y-position of the window
-		m_Config.screenWidth,             // width of the window
-		m_Config.screenHeight,            // height of the window
+		g_pAppConfig->screenWidth,             // width of the window
+		g_pAppConfig->screenHeight,            // height of the window
 		NULL,                             // we have no parent window, NULL
 		NULL,                             // we aren't using menus, NULL
 		hInstance,                        // application handle

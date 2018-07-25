@@ -25,8 +25,8 @@ namespace ZZ {
 			LPARAM lParam);
 
 
-		AppConfig m_Config;
 		HWND m_hWnd;
+		HDC m_hDC;
 	};
 
 }
