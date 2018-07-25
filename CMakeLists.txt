@@ -19,5 +19,5 @@ add_executable(App ${Heads} ${Sources}
 	"${PROJECT_SOURCE_DIR}/External/glad/src/glad_wgl.c")
 
 target_link_libraries(App Core)
-target_link_libraries(App D2D1.lib ole32.lib)
+target_link_libraries(App D2D1.lib ole32.lib d3d11.lib)
 target_link_libraries(App ${OPENGL_LIBRARIES})
