@@ -2,8 +2,9 @@
 #include <string>
 
 namespace ZZ {
-	struct AppConfig
+	class AppConfig
 	{
+	public:
 		std::string appName = "Main";
 		int screenWidth = 800;
 		int screenHeight = 600;
@@ -13,6 +14,8 @@ namespace ZZ {
 		int alphaBits = 8;
 		int depthBits = 24;
 		int stencilBits = 0;
+
+		std::string resPath = "f:\\Engine\\res";
 	};
 
 	extern AppConfig * g_pAppConfig;

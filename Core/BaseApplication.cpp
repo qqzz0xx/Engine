@@ -5,7 +5,6 @@ int ZZ::BaseApplication::Init()
 {
 	m_bQuit = false;
 
-	g_pGraphicsManager->Init();
 
 	return 0;
 }
