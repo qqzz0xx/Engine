@@ -54,15 +54,15 @@ void Shader::LoadByFile(const std::string & vs, const std::string & fs)
 	auto fs_id = compileShaderFunc(readFileFunc(fs), GL_FRAGMENT_SHADER);
 
 	// Shader Program
-	this->m_ProgramID = glCreateProgram();
-	glAttachShader(this->m_ProgramID, vs_id);
-	glAttachShader(this->m_ProgramID, fs_id);
-	glLinkProgram(this->m_ProgramID);
+	this->ID = glCreateProgram();
+	glAttachShader(this->ID, vs_id);
+	glAttachShader(this->ID, fs_id);
+	glLinkProgram(this->ID);
 	// Print linking errors if any
-	glGetProgramiv(this->m_ProgramID, GL_LINK_STATUS, &ok);
+	glGetProgramiv(this->ID, GL_LINK_STATUS, &ok);
 	if (!ok)
 	{
-		glGetProgramInfoLog(this->m_ProgramID, 512, NULL, infoLog);
+		glGetProgramInfoLog(this->ID, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 	// Delete the shaders as they're linked into our program now and no longer necessery
@@ -70,7 +70,6 @@ void Shader::LoadByFile(const std::string & vs, const std::string & fs)
 	glDeleteShader(fs_id);
 }
 
-void Shader::Use()
-{
-	glUseProgram(m_ProgramID);
-}
+
+
+

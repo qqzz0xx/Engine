@@ -15,7 +15,7 @@ namespace ZZ {
 		int depthBits = 24;
 		int stencilBits = 0;
 
-		std::string resPath = "f:\\Engine\\res";
+		std::string resPath = "c:\\GameEngineProjects\\Engine\\res";
 	};
 
 	extern AppConfig * g_pAppConfig;

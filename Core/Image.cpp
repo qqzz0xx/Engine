@@ -2,20 +2,31 @@
 #include "AssetLoader.h"
 
 
-Image::Image()
+
+Image::~Image()
 {
-	m_Width = 0;
-	m_Height = 0;
-	m_Channels = 0;
+	if (m_Buffer)
+	{
+		free(m_Buffer);
+	}
 }
 
-Image::Image(const std::string & fileName)
+Image::Image(Image && image)
 {
-	m_Buffer = AssetLoader::ReadText(fileName);
-	int width, height, nrChannels;
-	stbi_load_from_memory(m_Buffer.Data(), m_Buffer.Size(), &width, &height, &nrChannels, 0);
-	m_Width = width;
-	m_Height = height;
-	m_Channels = nrChannels;
+	m_Width = image.m_Width;
+	m_Height = image.m_Height;
+	m_Channels = image.m_Channels;
+	m_Buffer = image.m_Buffer;
+	image.m_Buffer = nullptr;
 }
 
+Image & Image::operator=(Image && image)
+{
+	m_Width = image.m_Width;
+	m_Height = image.m_Height;
+	m_Channels = image.m_Channels;
+	m_Buffer = image.m_Buffer;
+	image.m_Buffer = nullptr;
+
+	return *this;
+}

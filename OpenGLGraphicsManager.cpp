@@ -1,6 +1,6 @@
 #include "OpenGLGraphicsManager.h"
 #include "Shader.h"
-#include "Image.h"
+#include "AssetLoader.h"
 #include <iostream>
 using namespace std;
 
@@ -18,12 +18,14 @@ int ZZ::OpenGLGraphicsManager::Init()
 	}
 
 
-	shader.LoadByFile("f:\\Engine\\res\\simple.vs.glsl", "f:\\Engine\\res\\simple.fs.glsl");
+	shader.LoadByFile("c:\\GameEngineProjects\\Engine\\res\\simple.vs.glsl",
+		"c:\\GameEngineProjects\\Engine\\res\\simple.fs.glsl");
 	BuildBuffers();
 
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load("f:\\Engine\\res\\container.jpg", &width, &height, &nrChannels, 0);
-	Image image("container.jpg");
+	auto image = AssetLoader::LoadImage("container.jpg");
+	//int width, height, nrChannels;
+	//unsigned char *data = stbi_load("f:\\Engine\\res\\container.jpg", &width, &height, &nrChannels, 0);
+	//Image image("container.jpg");
 
 	return 0;
 }

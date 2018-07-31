@@ -6,8 +6,12 @@ set (CMAKE_CXX_STANDARD 11)
 
 find_package(OpenGL REQUIRED)
 
+include_directories(${PROJECT_SOURCE_DIR}/External/assimp/include)
 include_directories("${PROJECT_SOURCE_DIR}/Core")
 include_directories("${PROJECT_SOURCE_DIR}/External/glad/include")
+include_directories("${PROJECT_SOURCE_DIR}/External/glm")
+
+link_directories(${PROJECT_SOURCE_DIR}/External/assimp/lib)
 
 add_subdirectory(Core)
 
@@ -21,3 +25,4 @@ add_executable(App ${Heads} ${Sources}
 target_link_libraries(App Core)
 target_link_libraries(App D2D1.lib ole32.lib d3d11.lib)
 target_link_libraries(App ${OPENGL_LIBRARIES})
+target_link_libraries(App assimp-vc140-mt.lib IrrXML.lib zlibstatic.lib)
