@@ -11,12 +11,14 @@ Model::~Model()
 {
 }
 
-void ZZ::Model::loadModel(string const & path)
+void Model::loadModel(string const & path, bool gamma)
 {
+	this->gammaCorrection = gamma;
+
 	Assimp::Importer importer;
-	auto buf = AssetLoader::LoadBytes(path);
+	auto fullPath = AssetLoader::GetFullPath(path);
 	auto scene = 
-		importer.ReadFileFromMemory(buf.Data(), buf.Size(),
+		importer.ReadFile(fullPath,
 		aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 	{
@@ -27,6 +29,7 @@ void ZZ::Model::loadModel(string const & path)
 	processNode(scene->mRootNode, scene);
 
 }
+
 
 void ZZ::Model::processNode(aiNode * node, const aiScene * scene)
 {
@@ -53,9 +56,12 @@ void Model::processMesh(aiMesh * mesh, const aiScene * scene, Mesh * outMesh)
 		vertex.Position.y = mesh->mVertices[i].y;
 		vertex.Position.z = mesh->mVertices[i].z;
 
-		vertex.Normal.x = mesh->mNormals[i].x;
-		vertex.Normal.y = mesh->mNormals[i].y;
-		vertex.Normal.z = mesh->mNormals[i].z;
+		if (mesh->mNormals)
+		{
+			vertex.Normal.x = mesh->mNormals[i].x;
+			vertex.Normal.y = mesh->mNormals[i].y;
+			vertex.Normal.z = mesh->mNormals[i].z;
+		}
 
 		if (mesh->mTextureCoords[0] != NULL)
 		{
@@ -68,13 +74,21 @@ void Model::processMesh(aiMesh * mesh, const aiScene * scene, Mesh * outMesh)
 		}
 
 		// tangent
-		vertex.Tangent.x = mesh->mTangents[i].x;
-		vertex.Tangent.y = mesh->mTangents[i].y;
-		vertex.Tangent.z = mesh->mTangents[i].z;
+		if (mesh->mTangents)
+		{
+			vertex.Tangent.x = mesh->mTangents[i].x;
+			vertex.Tangent.y = mesh->mTangents[i].y;
+			vertex.Tangent.z = mesh->mTangents[i].z;
+		}
 		// bitangent
-		vertex.Bitangent.x = mesh->mBitangents[i].x;
-		vertex.Bitangent.y = mesh->mBitangents[i].y;
-		vertex.Bitangent.z = mesh->mBitangents[i].z;
+		if (mesh->mBitangents)
+		{
+			vertex.Bitangent.x = mesh->mBitangents[i].x;
+			vertex.Bitangent.y = mesh->mBitangents[i].y;
+			vertex.Bitangent.z = mesh->mBitangents[i].z;
+		}
+
+		outMesh->Vertices.emplace_back(vertex);
 	}
 
 	// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
@@ -164,6 +178,22 @@ GLuint Model::BuildGLTexture(const std::string & fileName)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	return id;
+}
+
+void ZZ::Model::BuildBuffer()
+{
+	for (auto& mesh : meshes)
+	{
+		mesh.BuildBuffer();
+	}
+}
+
+void ZZ::Model::Draw(const Shader & shader)
+{
+	for (auto& mesh : meshes)
+	{
+		mesh.Draw(shader);
+	}
 }
 
 

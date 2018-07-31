@@ -7,7 +7,7 @@ namespace ZZ {
 	public:
 		std::string appName = "Main";
 		int screenWidth = 800;
-		int screenHeight = 600;
+		int screenHeight = 800;
 		int redBits = 8;
 		int greenBits = 8;
 		int blueBits = 8;

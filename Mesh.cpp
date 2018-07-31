@@ -13,7 +13,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> text
 	this->textures = textures;
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
-	BuildGLBuffer();
+	BuildBuffer();
 }
 
 void Mesh::Draw(const Shader & shader)
@@ -53,7 +53,7 @@ void Mesh::Draw(const Shader & shader)
 	glActiveTexture(GL_TEXTURE0);
 }
 
-void Mesh::BuildGLBuffer()
+void ZZ::Mesh::BuildBuffer()
 {
 	// create buffers/arrays
 	glGenVertexArrays(1, &VAO);

@@ -4,6 +4,9 @@
 #include "Shader.h"
 #include "Triangles.h"
 #include "glad/glad.h"
+
+#include "Model.h"
+
 namespace ZZ {
 	class OpenGLGraphicsManager : public GraphicsManager
 	{
@@ -26,5 +29,6 @@ namespace ZZ {
 		std::vector<DrawBatchContext> m_Vao;
 		Shader shader;
 		Triangles triangle;
+		Model model;
 	};
 }

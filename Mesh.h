@@ -2,6 +2,7 @@
 #include "Header.h"
 #include "Image.h"
 #include "Shader.h"
+#include "IDrawNode.h"
 
 #include "glm.hpp"
 #include "glad/glad.h"
@@ -25,7 +26,7 @@ namespace ZZ
 		string path;
 	};
 
-	class Mesh
+	class Mesh : public IDrawNode
 	{
 	public:
 		Mesh();
@@ -33,9 +34,12 @@ namespace ZZ
 		vector<Vertex> Vertices;
 		vector<GLuint> Indices;
 		vector<Texture> textures;
-		GLuint VAO, VBO, EBO;
+		// Í¨¹ý IDrawNode ¼Ì³Ð
+		virtual void BuildBuffer() override;
 		void Draw(const Shader& shader);
 	private:
-		void BuildGLBuffer();
+		GLuint VAO, VBO, EBO;
+
+	
 	};
 }
