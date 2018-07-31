@@ -20,16 +20,14 @@ int ZZ::OpenGLGraphicsManager::Init()
 		cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded" << endl;
 	}
 
+	InitGLState();
 
 	shader.LoadByFile("c:\\GameEngineProjects\\Engine\\res\\simple.vs.glsl",
 		"c:\\GameEngineProjects\\Engine\\res\\simple.fs.glsl");
 
 	auto image = AssetLoader::LoadImage("container.jpg");
-	//int width, height, nrChannels;
-	//unsigned char *data = stbi_load("f:\\Engine\\res\\container.jpg", &width, &height, &nrChannels, 0);
-	//Image image("container.jpg");
-	//model.loadModel("mesh/sponza.obj");
 	model.loadModel("Crate1.obj");
+
 	BuildBuffers();
 	return 0;
 }
@@ -40,9 +38,10 @@ void ZZ::OpenGLGraphicsManager::Exit()
 
 void ZZ::OpenGLGraphicsManager::Update()
 {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shader.Use();
 
 	// view/projection transformations
@@ -88,5 +87,11 @@ void ZZ::OpenGLGraphicsManager::BuildBuffers()
 	//};
 
 	//m_Vao.emplace_back(ctx);
+
+}
+
+void ZZ::OpenGLGraphicsManager::InitGLState()
+{
+	glEnable(GL_DEPTH_TEST);
 
 }

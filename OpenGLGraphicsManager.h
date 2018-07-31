@@ -17,6 +17,7 @@ namespace ZZ {
 		virtual void Update() override;
 
 		void BuildBuffers();
+		void InitGLState();
 
 	private:
 		struct DrawBatchContext {
