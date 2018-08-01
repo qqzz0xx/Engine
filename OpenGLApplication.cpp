@@ -2,6 +2,7 @@
 #include <tchar.h>
 #include "glad/glad.h"
 
+
 using namespace std;
 
 namespace ZZ {
@@ -198,17 +199,10 @@ int ZZ::OpenGLApplication::Init()
 
 void ZZ::OpenGLApplication::Update()
 {
-	BaseApplication::Update();
-	MSG msg;
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	SwapBuffers(m_hDC);
+	__super::Update();
 }
 
 void ZZ::OpenGLApplication::Exit()
 {
+	__super::Exit();
 }

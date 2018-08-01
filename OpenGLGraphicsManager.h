@@ -6,6 +6,7 @@
 #include "glad/glad.h"
 
 #include "Model.h"
+#include "Camera.h"
 
 namespace ZZ {
 	class OpenGLGraphicsManager : public GraphicsManager
@@ -18,6 +19,7 @@ namespace ZZ {
 
 		void BuildBuffers();
 		void InitGLState();
+		void Draw();
 
 	private:
 		struct DrawBatchContext {
@@ -31,5 +33,8 @@ namespace ZZ {
 		Shader shader;
 		Triangles triangle;
 		Model model;
+
+		Camera m_Camera;
+
 	};
 }

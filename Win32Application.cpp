@@ -1,4 +1,7 @@
 #include "Win32Application.h"
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_win32.h"
 
 #include <tchar.h>
 
@@ -8,18 +11,30 @@ int ZZ::Win32Application::Init()
 	CreateMainWindow();
 	BaseApplication::Init();
 
+	// Setup Dear ImGui binding
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui_ImplWin32_Init(this->GetHWND());
+	ImGui_ImplOpenGL3_Init();
+
+	// Setup style
+	ImGui::StyleColorsDark();
+
 	return 0;
 }
 
 void ZZ::Win32Application::Exit()
 {
-	BaseApplication::Exit();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
+	BaseApplication::Exit();
 }
 
 void ZZ::Win32Application::Update()
 {
-	BaseApplication::Update();
 	MSG msg;
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
@@ -27,6 +42,17 @@ void ZZ::Win32Application::Update()
 		DispatchMessage(&msg);
 	}
 
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	BaseApplication::Update();
+
+	// Rendering
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	SwapBuffers(m_hDC);
 }
 
 bool ZZ::Win32Application::IsQuit()
@@ -80,9 +106,10 @@ void ZZ::Win32Application::CreateMainWindow()
 
 	ShowWindow(m_hWnd, SW_SHOW);
 }
-
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT ZZ::Win32Application::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
+	ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }

@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "glm.hpp"
 #include "ext.hpp"
+#include "imgui.h"
 #include <iostream>
 using namespace std;
 
@@ -28,6 +29,9 @@ int ZZ::OpenGLGraphicsManager::Init()
 	auto image = AssetLoader::LoadImage("container.jpg");
 	model.loadModel("Crate1.obj");
 
+	m_Camera.ComputeProjectionMatrix();
+	m_Camera.ComputeViewMatrix();
+
 	BuildBuffers();
 	return 0;
 }
@@ -38,26 +42,12 @@ void ZZ::OpenGLGraphicsManager::Exit()
 
 void ZZ::OpenGLGraphicsManager::Update()
 {
+	// Start the ImGui frame
 
-
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shader.Use();
-
-	// view/projection transformations
-	glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0, 10, -50), glm::vec3(), glm::vec3(0,1,0));
-	shader.setMat4("projection", projection);
-	shader.setMat4("view", view);
-	glm::mat4 modelMat;
-	modelMat = glm::scale(modelMat, glm::vec3(4.0f));
-	shader.setMat4("model", modelMat);
-	// render the triangle
-	//glBindVertexArray(m_Vao[0].vao);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	model.Draw(shader);
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	m_Camera.Update();
+	Draw();
 }
-
 void ZZ::OpenGLGraphicsManager::BuildBuffers()
 {
 	model.BuildBuffer();
@@ -93,5 +83,21 @@ void ZZ::OpenGLGraphicsManager::BuildBuffers()
 void ZZ::OpenGLGraphicsManager::InitGLState()
 {
 	glEnable(GL_DEPTH_TEST);
+}
+
+void ZZ::OpenGLGraphicsManager::Draw()
+{
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	shader.Use();
+	shader.setMat4("projection", m_Camera.GetProjectionMatrix());
+	shader.setMat4("view", m_Camera.GetViewMatrix());
+
+	glm::mat4 modelMat;
+	modelMat = glm::scale(modelMat, glm::vec3(4.0f));
+	shader.setMat4("model", modelMat);
+	model.Draw(shader);
+
 
 }

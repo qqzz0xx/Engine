@@ -3,7 +3,7 @@
 #include "GraphicsManager.h"
 #include "AssetLoader.h"
 #include "AppConfig.h"
-
+#include "StepTimer.h"
 using namespace ZZ;
 
 
@@ -11,6 +11,7 @@ namespace ZZ {
 	extern IApplication* g_pApp;
 	extern GraphicsManager* g_pGraphicsManager;
 	extern AppConfig* g_pAppConfig;
+	extern StepTimer* g_pTimer;
 }
 
 int main(int argc, char** argv) {
@@ -29,7 +30,9 @@ int main(int argc, char** argv) {
 
 
 	while (!g_pApp->IsQuit()) {
-		g_pApp->Update();
+		g_pTimer->Tick([&] {
+			g_pApp->Update();
+		});
 	}
 
 	g_pApp->Exit();

@@ -10,9 +10,11 @@ include_directories(${PROJECT_SOURCE_DIR}/External/assimp/include)
 include_directories("${PROJECT_SOURCE_DIR}/Core")
 include_directories("${PROJECT_SOURCE_DIR}/External/glad/include")
 include_directories("${PROJECT_SOURCE_DIR}/External/glm")
+include_directories(${PROJECT_SOURCE_DIR}/External/imgui)
 
 link_directories(${PROJECT_SOURCE_DIR}/External/assimp/lib)
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/External/imgui)
 add_subdirectory(Core)
 
 file (GLOB Sources *.cpp *.cc)
@@ -26,3 +28,4 @@ target_link_libraries(App Core)
 target_link_libraries(App D2D1.lib ole32.lib d3d11.lib)
 target_link_libraries(App ${OPENGL_LIBRARIES})
 target_link_libraries(App assimp-vc140-mt.lib IrrXML.lib zlibstatic.lib)
+target_link_libraries(App imgui)
